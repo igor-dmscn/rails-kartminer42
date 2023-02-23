@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_23_183507) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_23_201502) do
   create_table "placements", force: :cascade do |t|
     t.integer "position"
     t.datetime "created_at", null: false
@@ -30,6 +30,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_23_183507) do
     t.string "place"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "tournament_id", null: false
+    t.index ["tournament_id"], name: "index_races_on_tournament_id"
   end
 
   create_table "tournaments", force: :cascade do |t|
@@ -38,4 +40,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_23_183507) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "races", "tournaments"
 end
