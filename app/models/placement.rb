@@ -1,5 +1,8 @@
 class Placement < ApplicationRecord
-  validates :position, presence: true, numericality: { only_integer: true, greater_than: 0 }
+
+  MIN_POSITION = 1
+
+  validates :position, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: MIN_POSITION }
   validate :cannot_have_duplicate_position, :cannot_have_duplicate_racer
 
   belongs_to :racer
