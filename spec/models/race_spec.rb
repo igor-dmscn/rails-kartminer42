@@ -8,5 +8,7 @@ RSpec.describe Race, type: :model do
 
   describe 'associations' do
     it { should belong_to :tournament }
+
+    it { should have_many :placements }
   end
 end

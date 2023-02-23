@@ -7,4 +7,9 @@ RSpec.describe Placement, type: :model do
     it { should allow_value(1).for :position }
     it { should_not allow_value(0).for :position }
   end
+
+  describe 'associations' do
+    it { should belong_to :race }
+    it { should belong_to :racer }
+  end
 end

@@ -10,11 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_23_201502) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_23_202544) do
   create_table "placements", force: :cascade do |t|
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "race_id", null: false
+    t.integer "racer_id", null: false
+    t.index ["race_id"], name: "index_placements_on_race_id"
+    t.index ["racer_id"], name: "index_placements_on_racer_id"
   end
 
   create_table "racers", force: :cascade do |t|
@@ -40,5 +44,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_23_201502) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "placements", "racers"
+  add_foreign_key "placements", "races"
   add_foreign_key "races", "tournaments"
 end

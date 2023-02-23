@@ -11,4 +11,8 @@ RSpec.describe Racer, type: :model do
     it { should allow_value(Faker::Internet.url).for :image_url }
     it { should_not allow_value(Faker::File.file_name).for :image_url }
   end
+
+  describe 'associations' do
+    it { should have_many :placements }
+  end
 end
