@@ -16,7 +16,7 @@ FactoryBot.define do
     end
 
     trait :with_id do
-      id { generate(:id) }
+      sequence(:id)
     end
 
     trait :with_image_url do

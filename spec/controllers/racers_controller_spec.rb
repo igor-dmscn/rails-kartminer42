@@ -112,7 +112,11 @@ RSpec.describe RacersController, type: :controller do
   describe 'POST create' do
     context 'with all request body params' do
       let(:request_body) do
-          attributes_for(:racer)
+        {
+          name: 'Racer',
+          born_at: (Racer::MIN_AGE + 1).years.ago,
+          image_url: 'http://example.org'
+        }
       end
 
       it 'returns status created' do
@@ -124,7 +128,10 @@ RSpec.describe RacersController, type: :controller do
 
     context 'without request body name param' do
       let(:request_body) do
-          attributes_for(:racer, :without_name)
+        {
+          born_at: (Racer::MIN_AGE + 1).years.ago,
+          image_url: 'http://example.org'
+        }
       end
 
       it 'returns status bad request' do
@@ -136,7 +143,10 @@ RSpec.describe RacersController, type: :controller do
 
     context 'without request body born_at param' do
       let(:request_body) do
-          attributes_for(:racer, :without_born_at)
+        {
+          name: 'Racer',
+          image_url: 'http://example.org'
+        }
       end
 
       it 'returns status bad request' do
@@ -148,7 +158,11 @@ RSpec.describe RacersController, type: :controller do
 
     context 'with invalid request body born_at param' do
       let(:request_body) do
-          attributes_for(:racer, :with_invalid_born_at)
+        {
+          name: 'Racer',
+          born_at: 1,
+          image_url: 'http://example.org'
+        }
       end
 
       it 'returns status bad request' do
@@ -160,13 +174,166 @@ RSpec.describe RacersController, type: :controller do
 
     context 'with invalid request body image_url param' do
       let(:request_body) do
-          attributes_for(:racer, :with_invalid_image_url)
+        {
+          name: 'Racer',
+          born_at: (Racer::MIN_AGE + 1).years.ago,
+          image_url: 'image.jpg'
+        }
       end
 
       it 'returns status bad request' do
         post :create, params: { racer: request_body }, format: :json
 
         expect(response).to be_bad_request
+      end
+    end
+  end
+
+  describe 'PATCH update' do
+    context 'when racer exists' do
+      let(:racer) { build(:racer, :with_id) }
+      
+      context 'with all request body params' do
+        let(:request_body) do
+          {
+            name: 'Racer',
+            born_at: (Racer::MIN_AGE + 1).years.ago,
+            image_url: 'http://example.org'
+          }
+        end
+  
+        it 'returns status ok' do
+          expect(Racer).to receive(:find).and_return(racer)
+
+          patch :update, params: { id: racer.id, racer: request_body }, format: :json
+  
+          expect(response).to be_ok
+        end
+      end
+  
+      context 'without request body name param' do
+        let(:request_body) do
+          {
+            born_at: (Racer::MIN_AGE + 1).years.ago,
+            image_url: 'http://example.org'
+          }
+        end
+  
+        it 'returns status ok' do
+          expect(Racer).to receive(:find).and_return(racer)
+
+          patch :update, params: { id: racer.id, racer: request_body }, format: :json
+  
+          expect(response).to be_ok
+        end
+      end
+  
+      context 'without request body born_at param' do
+        let(:request_body) do
+          {
+            name: 'Racer',
+            image_url: 'http://example.org'
+          }
+        end
+  
+        it 'returns status ok' do
+          expect(Racer).to receive(:find).and_return(racer)
+          
+          patch :update, params: { id: racer.id, racer: request_body }, format: :json
+  
+          expect(response).to be_ok
+        end
+      end
+  
+      context 'with invalid request body born_at param' do
+        let(:request_body) do
+          {
+            name: 'Racer',
+            born_at: 1
+          }
+        end
+  
+        it 'returns status bad request' do
+          expect(Racer).to receive(:find).and_return(racer)
+          
+          patch :update, params: { id: racer.id, racer: request_body }, format: :json
+  
+          expect(response).to be_bad_request
+        end
+      end
+  
+      context 'with invalid request body image_url param' do
+        let(:request_body) do
+          {
+            name: 'Racer',
+            born_at: (Racer::MIN_AGE + 1).years.ago,
+            image_url: 'image.jpg'
+          }
+        end
+  
+        it 'returns status bad request' do
+          expect(Racer).to receive(:find).and_return(racer)
+          
+          patch :update, params: { id: racer.id, racer: request_body }, format: :json
+  
+          expect(response).to be_bad_request
+        end
+      end
+    end
+
+    context 'when racer does not exists' do
+      it 'returns status not found' do
+        patch :update, params: { id: 1 }, format: :json
+
+        expect(response).to be_not_found
+      end
+
+      let(:expected_body) do
+        {
+          error: true,
+          message: 'Not found'
+        }
+      end
+
+      it 'returns not found error body' do
+        patch :update, params: { id: 1 }, format: :json
+
+        expect(response_body).to eq(expected_body)
+      end
+    end
+  end
+
+  describe 'DELETE delete' do
+    context 'when racer exists' do
+      let(:racer) { build(:racer, :with_id) }
+
+      it 'returns status ok' do
+        expect(Racer).to receive(:find).and_return(racer)
+
+        delete :destroy, params: { id: racer.id }, format: :json
+
+        expect(response).to be_ok
+      end
+    end
+
+    context 'when racer does not exists' do
+      it 'returns status not found' do
+        delete :destroy, params: { id: 1 }, format: :json
+
+        expect(response).to be_not_found
+      end
+
+      let(:expected_body) do
+        {
+          error: true,
+          message: 'Not found'
+        }
+      end
+
+      it 'returns not found error body' do
+        delete :destroy, params: { id: 1 }, format: :json
+
+        expect(response_body).to eq(expected_body)
       end
     end
   end
