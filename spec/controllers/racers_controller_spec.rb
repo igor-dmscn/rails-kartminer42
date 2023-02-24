@@ -108,4 +108,66 @@ RSpec.describe RacersController, type: :controller do
       end
     end
   end
+
+  describe 'POST create' do
+    context 'with all request body params' do
+      let(:request_body) do
+          attributes_for(:racer)
+      end
+
+      it 'returns status created' do
+        post :create, params: { racer: request_body }, format: :json
+
+        expect(response).to be_created
+      end
+    end
+
+    context 'without request body name param' do
+      let(:request_body) do
+          attributes_for(:racer, :without_name)
+      end
+
+      it 'returns status bad request' do
+        post :create, params: { racer: request_body }, format: :json
+
+        expect(response).to be_bad_request
+      end
+    end
+
+    context 'without request body born_at param' do
+      let(:request_body) do
+          attributes_for(:racer, :without_born_at)
+      end
+
+      it 'returns status bad request' do
+        post :create, params: { racer: request_body }, format: :json
+
+        expect(response).to be_bad_request
+      end
+    end
+
+    context 'with invalid request body born_at param' do
+      let(:request_body) do
+          attributes_for(:racer, :with_invalid_born_at)
+      end
+
+      it 'returns status bad request' do
+        post :create, params: { racer: request_body }, format: :json
+
+        expect(response).to be_bad_request
+      end
+    end
+
+    context 'with invalid request body image_url param' do
+      let(:request_body) do
+          attributes_for(:racer, :with_invalid_image_url)
+      end
+
+      it 'returns status bad request' do
+        post :create, params: { racer: request_body }, format: :json
+
+        expect(response).to be_bad_request
+      end
+    end
+  end
 end
