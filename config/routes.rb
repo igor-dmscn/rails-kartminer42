@@ -5,5 +5,5 @@ Rails.application.routes.draw do
   # root "articles#index"
 
   resources 'racers'
-  
+  resources 'races', except: [:update]
 end
