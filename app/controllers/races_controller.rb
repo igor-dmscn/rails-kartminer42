@@ -4,6 +4,16 @@ class RacesController < ApplicationController
     @races = Race.all.includes(:placements).order('placements.position ASC')
   end
 
+  def create
+    @race = Race.new(race_params)
+
+    if @race.save
+      head :created
+    else
+      head :bad_request
+    end
+  end
+
   def show;  end
 
   def destroy
@@ -17,5 +27,9 @@ class RacesController < ApplicationController
     @race = Race.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: true, message: 'Not found' }, status: :not_found
+  end
+
+  def race_params
+    params.required(:race).permit(:tournament_id, :place, :date, placements_attributes: [:id, :position])
   end
 end
