@@ -34,7 +34,7 @@ class RacersController < ApplicationController
   private
   def find_racer
     @racer = Racer.find(params[:id])
-  rescue Exception
+  rescue ActiveRecord::RecordNotFound
     render json: { error: true, message: 'Not found' }, status: :not_found
   end
 
