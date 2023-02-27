@@ -6,4 +6,5 @@ Rails.application.routes.draw do
 
   resources 'racers'
   resources 'races', except: [:update]
+  resources 'tournaments', except: [:update, :destroy]
 end
