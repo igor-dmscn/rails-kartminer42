@@ -9,6 +9,10 @@ class TournamentsController < ApplicationController
     end
   end
 
+  def index
+    @tournaments = Tournament.all.includes(:races)
+  end
+
   private
   def tournament_params
     params.required(:tournament).permit(:name)
