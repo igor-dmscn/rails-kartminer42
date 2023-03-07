@@ -30,6 +30,6 @@ class RacesController < ApplicationController
   end
 
   def race_params
-    params.required(:race).permit(:tournament_id, :place, :date, placements_attributes: [:id, :position])
+    params.required(:race).permit(:tournament_id, :place, :date, placements_attributes: [:racer_id, :position])
   end
 end
